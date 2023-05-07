@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LoginBg, Logo } from "../assets";
 import { LoginInput } from "../components";
 import { MdOutlineMail, MdLockOutline, FcGoogle } from "../assets/icons";
 import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
 import { useNavigate } from "react-router-dom";
-
 import {
   getAuth,
   signInWithPopup,
@@ -15,6 +14,9 @@ import {
 } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { validateUserJWTToken } from "../api";
+import { setUserDetails } from "../context/actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
+import { alertInfo, alertWarning } from "../context/actions/alertActions";
 
 const Login = () => {
   const [userEmail, setUserEmail] = useState("");
@@ -26,6 +28,17 @@ const Login = () => {
   const provider = new GoogleAuthProvider();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
+  const alert = useSelector((state) => state.alert);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/", { replace: true });
+    }
+  }, [user]);
+
   const loginWithGoogle = async () => {
     await signInWithPopup(firebaseAuth, provider).then((userCred) => {
       firebaseAuth.onAuthStateChanged((cred) => {
@@ -33,6 +46,7 @@ const Login = () => {
           cred.getIdToken().then((token) => {
             validateUserJWTToken(token).then((data) => {
               console.log(data);
+              dispatch(setUserDetails(data));
             });
             navigate("/", { replace: true });
           });
@@ -42,7 +56,7 @@ const Login = () => {
   };
   const signUpWithEmailPass = async () => {
     if (userEmail === "" || password === "" || confirm_password === "") {
-      //alert message
+      dispatch(alertInfo("Поля повинні бути заповнені"));
     } else {
       if (password === confirm_password) {
         setUserEmail("");
@@ -57,7 +71,7 @@ const Login = () => {
             if (cred) {
               cred.getIdToken().then((token) => {
                 validateUserJWTToken(token).then((data) => {
-                  console.log(data);
+                  dispatch(setUserDetails(data));
                 });
                 navigate("/", { replace: true });
               });
@@ -66,10 +80,11 @@ const Login = () => {
         });
         console.log("Equal");
       } else {
-        //alert message
+        dispatch(alertWarning("Пароль не співпадає"));
       }
     }
   };
+
   const signInWithEmailPass = async () => {
     if (userEmail !== "" && password !== "") {
       await signInWithEmailAndPassword(firebaseAuth, userEmail, password).then(
@@ -78,7 +93,7 @@ const Login = () => {
             if (cred) {
               cred.getIdToken().then((token) => {
                 validateUserJWTToken(token).then((data) => {
-                  console.log(data);
+                  dispatch(setUserDetails(data));
                 });
                 navigate("/", { replace: true });
               });
@@ -87,7 +102,7 @@ const Login = () => {
         }
       );
     } else {
-      //alert message
+      dispatch(alertWarning("Пароль не співпадає"));
     }
   };
 
