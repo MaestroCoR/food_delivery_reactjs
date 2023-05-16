@@ -17,6 +17,8 @@ import {
 } from "../context/actions/alertActions";
 import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
+import { addNewProduct, getAllProducts } from "../api";
+import { setAllProducts } from "../context/actions/productActions";
 const DBNewItem = () => {
   const [itemName, setItemName] = useState("");
   const [category, setCategory] = useState(null);
@@ -70,6 +72,28 @@ const DBNewItem = () => {
       setTimeout(() => {
         dispatch(alertNULL());
       }, 3000);
+    });
+  };
+  const submitNewData = () => {
+    const data = {
+      product_name: itemName,
+      product_category: category,
+      product_price: price,
+      imageURL: imageDownloadURL,
+    };
+    addNewProduct(data).then((res) => {
+      console.log(res);
+      dispatch(alertSuccess("Новий товар додано"));
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
+      setImageDownloadURL(null);
+      setItemName("");
+      setPrice("");
+      setCategory(null);
+    });
+    getAllProducts().then((data) => {
+      dispatch(setAllProducts(data));
     });
   };
   return (
@@ -182,6 +206,14 @@ const DBNewItem = () => {
             </>
           )}
         </div>
+
+        <motion.button
+          onClick={submitNewData}
+          {...buttonClick}
+          className="w-9/12 py-2 rounded-md bg-emerald-400 text-primary hover:bg-emerald-500 cursor-pointer"
+        >
+          Зберегти
+        </motion.button>
       </div>
     </div>
   );

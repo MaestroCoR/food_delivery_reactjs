@@ -3,15 +3,16 @@ import MaterialTable from "material-table";
 import { ThemeProvider, createTheme } from "@mui/material";
 
 const DataTable = ({ columns, data, title, actions }) => {
-  const defaultMaterilTheme = createTheme();
+  const defaultMaterialTheme = createTheme();
+
   return (
-    <ThemeProvider theme={defaultMaterilTheme}>
-      <MaterialTable>
-        columns = {columns}
-        data = {data}
-        title = {title}
-        actions = {actions}
-      </MaterialTable>
+    <ThemeProvider theme={defaultMaterialTheme}>
+      <MaterialTable
+        columns={columns}
+        data={data}
+        title={title}
+        actions={actions}
+      />
     </ThemeProvider>
   );
 };
