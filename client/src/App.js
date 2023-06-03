@@ -4,11 +4,12 @@ import { Dashboard, Login, Main } from "./containers";
 import { getAuth } from "firebase/auth";
 import { app } from "./config/firebase.config";
 import { useDispatch, useSelector } from "react-redux";
-import { validateUserJWTToken } from "./api";
+import { getAllCartItems, validateUserJWTToken } from "./api";
 import { setUserDetails } from "./context/actions/userActions";
 import { fadeInOut } from "./animations";
 import { motion } from "framer-motion";
 import { Alert, MainLoader } from "./components";
+import { setCartItems } from "./context/actions/cartAction";
 
 const App = () => {
   const firebaseAuth = getAuth(app);
@@ -23,6 +24,12 @@ const App = () => {
       if (cred) {
         cred.getIdToken().then((token) => {
           validateUserJWTToken(token).then((data) => {
+            if (data) {
+              getAllCartItems(data.data?.user_id).then((items) => {
+                console.log(items);
+                dispatch(setCartItems(items));
+              });
+            }
             dispatch(setUserDetails(data));
           });
         });

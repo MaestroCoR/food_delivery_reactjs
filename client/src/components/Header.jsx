@@ -9,9 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { setUserNull } from "../context/actions/userActions";
+import { setCartOn } from "../context/actions/displayCartAction";
 
 const Header = () => {
   const user = useSelector((state) => state.user);
+  const cart = useSelector((state) => state.cart);
+
   const [isMenu, setIsMenu] = useState(false);
   const firebaseAuth = getAuth(app);
   const navigate = useNavigate();
@@ -26,14 +29,14 @@ const Header = () => {
       .catch((err) => console.log(err));
   };
   return (
-    <header className="flex items-center justify-between px-12 md:px-20 py-6 fixed backdrop-blur-md z-50 inset-x-0 top-0 ">
+    <header className="flex items-center justify-between px-12 md:px-20 py-6 fixed bg-opacity-90 bg-gray-100  backdrop-blur-md z-50 inset-x-0 top-0 ">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={Logo} className="w-20" alt="" />
         <p className="font-semibold text-xl">CheDelivery</p>
       </NavLink>
 
       <nav className="flex justify-center items-center gap-8">
-        <ul className="hidden md:flex items-center justify-center gap-16">
+        <ul className="hidden md:flex items-center justify-center gap-16 ">
           <NavLink
             className={({ isActive }) =>
               isActive ? isActiveStyles : isNotActiveStyles
@@ -68,11 +71,20 @@ const Header = () => {
           </NavLink>
         </ul>
 
-        <motion.div {...buttonClick} className="relative cursor-pointer">
+        <motion.div
+          {...buttonClick}
+          onClick={() => dispatch(setCartOn())}
+          className="relative cursor-pointer"
+        >
           <AiOutlineShoppingCart className="text-3xl text-textColor" />
-          <div className="w-6 h-6 rounded-full bg-red-500 flex items-centers justify-center absolute -top-3 -right-3">
-            <p className="text-primary text-base font-semibold">2</p>
-          </div>
+
+          {cart?.length > 0 && (
+            <div className="w-6 h-6 rounded-full bg-red-500 flex items-centers justify-center absolute -top-3 -right-3">
+              <p className="text-primary text-base font-semibold">
+                {cart?.length}
+              </p>
+            </div>
+          )}
         </motion.div>
 
         {user ? (
@@ -93,7 +105,7 @@ const Header = () => {
                 <motion.div
                   {...slideTop}
                   onMouseLeave={() => setIsMenu(false)}
-                  className="px-6 py-4 w-72 bg-opacity-40 bg-gray-200 
+                  className="px-6 py-4 w-72 bg-opacity-90 bg-gray-100 
               backdrop-blur-md rounded-md shadow-md absolute top-12 right-0 
               flex flex-col gap-4"
                 >

@@ -4,6 +4,8 @@ import {
   MdLogout,
   MdSearch,
   MdOutlineLogout,
+  MdOutlineFastfood,
+  MdOutlineFilterAltOff,
 } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { FaCheck } from "react-icons/fa";
@@ -15,6 +17,8 @@ import {
   AiOutlineDelete,
 } from "react-icons/ai";
 import { BsToggles2, BsFillBellFill } from "react-icons/bs";
+import { BiChevronsRight } from "react-icons/bi";
+
 export {
   MdOutlineMail,
   MdLockOutline,
@@ -30,4 +34,7 @@ export {
   BsToggles2,
   BsFillBellFill,
   MdOutlineLogout,
+  MdOutlineFastfood,
+  MdOutlineFilterAltOff,
+  BiChevronsRight,
 };
