@@ -11,6 +11,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaCheck } from "react-icons/fa";
 import {
   AiOutlineInfoCircle,
+  AiOutlineArrowLeft,
   AiOutlineWarning,
   AiOutlineShoppingCart,
   AiOutlineCloudUpload,
@@ -25,6 +26,7 @@ export {
   FcGoogle,
   FaCheck,
   AiOutlineWarning,
+  AiOutlineArrowLeft,
   AiOutlineInfoCircle,
   AiOutlineShoppingCart,
   AiOutlineCloudUpload,

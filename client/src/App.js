@@ -8,8 +8,9 @@ import { getAllCartItems, validateUserJWTToken } from "./api";
 import { setUserDetails } from "./context/actions/userActions";
 import { fadeInOut } from "./animations";
 import { motion } from "framer-motion";
-import { Alert, MainLoader } from "./components";
+import { Alert, MainLoader, UsersOrders } from "./components";
 import { setCartItems } from "./context/actions/cartAction";
+import { CheckOutSuccess } from "./components";
 
 const App = () => {
   const firebaseAuth = getAuth(app);
@@ -54,6 +55,8 @@ const App = () => {
         <Route path="/*" element={<Main />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="/checkout-success/*" element={<CheckOutSuccess />} />
+        <Route path="/user-orders" element={<UsersOrders />} />
       </Routes>
 
       {alert?.type && <Alert type={alert?.type} message={alert?.message} />}

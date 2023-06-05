@@ -4,13 +4,15 @@ import { buttonClick, slideIn, straggerFadeInOut } from "../animations";
 import { useDispatch, useSelector } from "react-redux";
 import { setCartOff } from "../context/actions/displayCartAction";
 import { BiChevronsRight, MdOutlineFilterAltOff } from "../assets/icons";
-import { getAllCartItems, increaseItemQuantity } from "../api";
+import { baseURL, getAllCartItems, increaseItemQuantity } from "../api";
 import { setCartItems } from "../context/actions/cartAction";
 import { alertNULL, alertSuccess } from "../context/actions/alertActions";
+import axios from "axios";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+  const user = useSelector((state) => state.user);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
@@ -22,6 +24,23 @@ const Cart = () => {
       });
     }
   }, [cart]);
+
+  const handleCheckOut = () => {
+    const data = {
+      user: user,
+      cart: cart,
+      total: total,
+    };
+    axios
+      .post(`${baseURL}/api/products/create-checkout-session`, { data })
+      .then((res) => {
+        if (res.data.url) {
+          window.location.href = res.data.url;
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <motion.div
       {...slideIn}
@@ -60,7 +79,7 @@ const Cart = () => {
             </div>
             <div
               className="bg-white rouded-t-[60px] w-full h-[35%] flex flex-col
-      items-center justify-center px-4 py-6 gap-24"
+      items-center justify-start px-4 py-3 gap-12"
             >
               <div className="w-full flex items-center justify-evenly">
                 <p className="text-3xl text-textColor font-semibold">Сума:</p>
@@ -71,6 +90,14 @@ const Cart = () => {
                   <span className="text-textColor">₴</span> {total}
                 </p>
               </div>
+              <motion.button
+                {...buttonClick}
+                className="bg-emerald-400 w-[70%] px-4 py-3 text-xl text-headingColor
+              font-semibold hover:bg-emerald-500 drop-shadow-md rounded-2xl"
+                onClick={handleCheckOut}
+              >
+                Оплатити
+              </motion.button>
             </div>
           </>
         ) : (

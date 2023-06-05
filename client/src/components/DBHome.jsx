@@ -109,7 +109,17 @@ const DBHome = () => {
                       "#fc2876",
                     ],
 
-                    data: [20, 20, 80, 10, 20, 20, 80, 10, 10],
+                    data: [
+                      drinks?.length,
+                      vegetables?.length,
+                      fruits?.length,
+                      seafood?.length,
+                      meat?.length,
+                      dairy?.length,
+                      cereals?.length,
+                      deserts?.length,
+                      bread?.length,
+                    ],
                   },
                 ],
               }}

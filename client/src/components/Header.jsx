@@ -115,12 +115,15 @@ const Header = () => {
                   >
                     Профіль
                   </Link>
-                  <Link
-                    className="hover:text-emerald-500 text-xl text-textColor"
-                    to={"/dashboard/home"}
-                  >
-                    Особистий кабінет
-                  </Link>
+                  {user?.user_id === process.env.REACT_APP_ADMIN_ID && (
+                    <Link
+                      className="hover:text-emerald-500 text-xl text-textColor"
+                      to={"/dashboard/home"}
+                    >
+                      Особистий кабінет
+                    </Link>
+                  )}
+
                   <Link
                     className="hover:text-emerald-500 text-xl text-textColor"
                     to={"/user-orders"}

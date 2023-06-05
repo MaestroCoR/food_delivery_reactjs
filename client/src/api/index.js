@@ -108,3 +108,27 @@ export const decreaseItemQuantity = async (user_id, productId, type) => {
     return null;
   }
 };
+
+//Отримати всі замовлення
+export const getAllOrders = async () => {
+  try {
+    const res = await axios.get(`${baseURL}/api/products/orders/`);
+    return res.data.data;
+  } catch (error) {
+    return null;
+  }
+};
+
+// Оновити статус замовлення
+export const updateOrderSts = async (order_id, sts) => {
+  try {
+    const res = await axios.post(
+      `${baseURL}/api/products/updateOrder/${order_id}`,
+      null,
+      { params: { sts: sts } }
+    );
+    return res.data.data;
+  } catch (error) {
+    return null;
+  }
+};

@@ -5,6 +5,8 @@ import { getAllProducts } from "../api";
 import { setAllProducts } from "../context/actions/productActions";
 import { setAllUserDetails } from "../context/actions/allUsersAction";
 import { getAllUsers } from "../api";
+import { getAllOrders } from "../api";
+import { setOrders } from "../context/actions/ordersAction";
 import React, { useEffect } from "react";
 
 const Dashboard = () => {
@@ -22,6 +24,15 @@ const Dashboard = () => {
     if (!allUsers) {
       getAllUsers().then((data) => {
         dispatch(setAllUserDetails(data));
+      });
+    }
+  }, []);
+
+  const orders = useSelector((state) => state.orders);
+  useEffect(() => {
+    if (!orders) {
+      getAllOrders().then((data) => {
+        dispatch(setOrders(data));
       });
     }
   }, []);
