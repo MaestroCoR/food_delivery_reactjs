@@ -120,7 +120,7 @@ const Login = () => {
       >
         {/* Top logo section*/}
         <div className="flex items-center justify-start gap-4 w-full">
-          <img src={Logo} className=" w-24" alt="logo" />
+          <img src={Logo} className=" w-16" alt="logo" />
           <p className="text-headingColor font-semibold text-2xl mt-3">
             CheDelivery
           </p>

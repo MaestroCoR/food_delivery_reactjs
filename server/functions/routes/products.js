@@ -186,28 +186,35 @@ router.get("/getCartItems/:user_id", async (req, res) => {
 });
 
 router.post("/create-checkout-session", async (req, res) => {
+  const cartWithoutImage = req.body.data.cart.map((item) => {
+    const { imageURL, product_category, product_price, product_name, ...rest } =
+      item;
+    return rest;
+  });
   const customer = await stripe.customers.create({
     metadata: {
       user_id: req.body.data.user.user_id,
-      cart: JSON.stringify(req.body.data.cart),
+      cart: JSON.stringify(cartWithoutImage),
       total: req.body.data.total,
     },
   });
 
   const line_items = req.body.data.cart.map((item) => {
+    const { imageURL, product_category, ...rest } = item;
+
     return {
       price_data: {
         currency: "uah",
         product_data: {
-          name: item.product_name,
-          images: [item.imageURL],
+          name: rest.product_name,
+          // images: [item.imageURL],
           metadata: {
-            id: item.productId,
+            id: rest.productId,
           },
         },
-        unit_amount: item.product_price * 100,
+        unit_amount: rest.product_price * 100,
       },
-      quantity: item.quantity,
+      quantity: rest.quantity,
     };
   });
 
@@ -236,7 +243,7 @@ router.post("/create-checkout-session", async (req, res) => {
     customer: customer.id,
     mode: "payment",
     success_url: `${process.env.CLIENT_URL}checkout-success`,
-    cancel_url: `${process.env.CLIENT_URL}/`,
+    cancel_url: `${process.env.CLIENT_URL}`,
   });
 
   res.send({ url: session.url });
@@ -284,7 +291,18 @@ router.post(
 
 const createOrder = async (customer, intent, res) => {
   try {
+    const userId = customer.metadata.user_id;
     const orderId = Date.now();
+    const cartSnapshot = await db
+      .collection("cartItems")
+      .doc(`/${userId}/`)
+      .collection("items")
+      .get();
+
+    const cartItems = [];
+    cartSnapshot.forEach((doc) => {
+      cartItems.push({ ...doc.data() });
+    });
     const data = {
       intentId: intent.id,
       orderId: orderId,
@@ -295,7 +313,7 @@ const createOrder = async (customer, intent, res) => {
       customer: intent.customer_details,
       shipping_details: intent.shipping_details,
       userId: customer.metadata.user_id,
-      items: JSON.parse(customer.metadata.cart),
+      items: cartItems,
       total: customer.metadata.total,
       sts: "preparing",
     };
